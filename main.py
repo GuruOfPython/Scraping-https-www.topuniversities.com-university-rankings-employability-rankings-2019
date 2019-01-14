@@ -8,9 +8,15 @@ import csv
 
 page_source = open("QS Graduate Employability Rankings 2019 _ Top Universities.html", "r", encoding="utf-8").read()
 tree = html.fromstring(page_source)
-csv_writer = csv.writer(open("result.csv", "w", encoding="utf-8", newline=""))
+import codecs
+result_file = codecs.open("result.csv", "w", "utf-8")
+result_file.write(u'\ufeff')
+
+def insert_row(result_row):
+    result_file.write('"' + '","'.join(result_row) + '"' + "\n")
+    result_file.flush()
 header = ["Rank", "Name", "Location", "About", "Link"]
-csv_writer.writerow(header)
+insert_row(result_row=header)
 
 rows = tree.xpath('//table[@id="qs-rankings"]/tbody/tr')
 for i, row in enumerate(rows):
@@ -39,5 +45,5 @@ for i, row in enumerate(rows):
         about = ""
 
     result_row = [rank, name, location, about, link]
-    csv_writer.writerow(result_row)
+    insert_row(result_row)
     print("[Details] {}".format(result_row))
