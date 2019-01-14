@@ -8,7 +8,9 @@ import csv
 
 page_source = open("QS Graduate Employability Rankings 2019 _ Top Universities.html", "r", encoding="utf-8").read()
 tree = html.fromstring(page_source)
-
+csv_writer = csv.writer(open("result.csv", "w", encoding="utf-8", newline=""))
+header = ["Rank", "Name", "Location", "About", "Link"]
+csv_writer.writerow(header)
 
 rows = tree.xpath('//table[@id="qs-rankings"]/tbody/tr')
 for i, row in enumerate(rows):
@@ -32,7 +34,10 @@ for i, row in enumerate(rows):
     try:
         r = requests.get(link)
         tree = html.fromstring(r.text)
-        about = "\n".join([elm.strip() for elm in tree.xpath('//div[@class="field-profile-overview"]/p/text()') if elm.strip()])
+        about = "\n".join([elm.strip() for elm in tree.xpath('//div[contains(@class,"field-profile")]//text()') if elm.strip()]).strip()
     except:
         about = ""
 
+    result_row = [rank, name, location, about, link]
+    csv_writer.writerow(result_row)
+    print("[Details] {}".format(result_row))
