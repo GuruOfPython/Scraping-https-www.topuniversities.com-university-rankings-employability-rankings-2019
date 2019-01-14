@@ -15,7 +15,7 @@ csv_writer.writerow(header)
 rows = tree.xpath('//table[@id="qs-rankings"]/tbody/tr')
 for i, row in enumerate(rows):
     try:
-        rank = row.xpath('.//span[@class="rank "]/text()')[0].strip()
+        rank = row.xpath('.//span[contains(@class,"rank")]/text()')[0].strip()
     except:
         rank = ""
     try:
